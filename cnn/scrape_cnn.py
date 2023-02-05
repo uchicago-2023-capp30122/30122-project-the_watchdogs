@@ -1,45 +1,50 @@
+import sys
+import json
+import lxml.html
 import requests
-from bs4 import BeautifulSoup as soup
 from utils import url_to_root
 
-url = "https://www.cnn.com/2021/10/10/politics/us-capitol-police-whistleblower-january-6/index.html"
-root = url_to_root(url)
+url="https://www.cnn.com/2022/02/09/politics/mitch-mcconnell-violent-insurrection/index.html"
 
-href = "https://www.cnn.com"
+def scrape_article(url):
+    """
+    This function takes a URL to a CNN news article and returns a
+    dictionary with the title, source (CNN), date published, description, 
+    keywords, body of the text.
 
-d = today.strftime("%m-%d-%y")
-print("date =", d)
+    Parameters:
+        * url:  a URL to a news article on CNN
 
-cnn_url="https://www.cnn.com/2022/02/09/politics/mitch-mcconnell-violent-insurrection/index.html"
+    Returns:
+        A dictionary with the following keys:
+            * url:          the URL of the news article page
+            * title:        the title of the article
+            * source:       the name of the media source (CNN in this case)
+            * date:         the publish date
+            * description:  the description of the article
+            * keywords:     the search keywords for the article
+            * text:         the article text itself
+    """
 
-html = requests.get(cnn_url)
+    article = {}
+    root = url_to_root(url)
 
-bsobj = soup(html.content,'lxml')
-bsobj
+    article['url'] = url
+    #get title, remove the ' | CNN Politics' at the end
+    article['title'] = root.cssselect("title")[0].text_content()[:-15]
+    article['source'] = 'CNN'
+    article['date'] = 'xx'
+    article['description'] = 'xx'
+    article['keywords'] = 'xx'
+    article['text'] = 'xx'
 
-for link in bsobj.findAll("h2"):
-    print("Headline : {}".format(link.text))
+    return article
 
 
-for news in bsobj.findAll('article',{'class':'sc-jqCOkK sc-kfGgVZ hQCVkd'}):
-    print(news.text.strip())
 
-nbc_url='https://www.nbcnews.com/health/coronavirus'
-r = requests.get('https://www.nbcnews.com/health/coronavirus')
-b = soup(r.content,'lxml')
 
-for news in b.findAll('h2'):
-    print(news.text)
 
-links = []
-for news in b.findAll('h2',{'class':'teaseCard__headline'}):
-    links.append(news.a['href'])
-    
-links
 
-for link in links:
-    page = requests.get(link)
-    bsobj = soup(page.content)
-    for news in bsobj.findAll('div',{'class':'article-body__section article-body__last-section'}):
-        print(news.text.strip())
+
+
 
