@@ -3,6 +3,9 @@ import json
 import lxml.html
 import requests
 from utils import url_to_root
+#from selenium import webdriver
+#from selenium.webdriver.common.by import By
+#from selenium.webdriver.common.keys import Keys
 
 url="https://www.cnn.com/2022/02/09/politics/mitch-mcconnell-violent-insurrection/index.html"
 
@@ -31,12 +34,12 @@ def scrape_article(url):
 
     article['url'] = url
     #get title, remove the ' | CNN Politics' at the end
-    article['title'] = root.cssselect("title")[0].text_content()[:-15]
+    article['title'] = root.cssselect("h1.headline__text").text_content().strip()
+    article['text'] = root.cssselect("div.article__content")[0].text_content().strip("\n")
     article['source'] = 'CNN'
     article['date'] = 'xx'
     article['description'] = 'xx'
     article['keywords'] = 'xx'
-    article['text'] = 'xx'
 
     return article
 
