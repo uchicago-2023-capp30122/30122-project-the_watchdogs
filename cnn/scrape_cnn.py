@@ -1,11 +1,23 @@
 import sys
 import json
 import lxml.html
+from lxml import etree
 import requests
 from utils import url_to_root
+from bs4 import BeautifulSoup
+
 #from selenium import webdriver
 #from selenium.webdriver.common.by import By
 #from selenium.webdriver.common.keys import Keys
+
+from bs4 import BeautifulSoup
+html="""
+<p>hello <b>there</b></p>
+"""
+soup = BeautifulSoup(html, 'html.parser')
+p = soup.find('p')
+print(p.string)
+print(p.text)
 
 url="https://www.cnn.com/2022/02/09/politics/mitch-mcconnell-violent-insurrection/index.html"
 
@@ -33,12 +45,11 @@ def scrape_article(url):
     root = url_to_root(url)
 
     article['url'] = url
-    #get title, remove the ' | CNN Politics' at the end
-    article['title'] = root.cssselect("h1.headline__text").text_content().strip()
+    article['title'] = root.cssselect("h1.headline__text")[0].text_content().strip()
     article['text'] = root.cssselect("div.article__content")[0].text_content().strip("\n")
     article['source'] = 'CNN'
-    article['date'] = 'xx'
-    article['description'] = 'xx'
+    article['date'] = root.cssselect("div.timestamp")[0].text_content()
+    article['description'] = root.xpath("/html/head/meta[6]")
     article['keywords'] = 'xx'
 
     return article
