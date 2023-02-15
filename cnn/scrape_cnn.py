@@ -1,10 +1,10 @@
 import json
 import lxml.html
 import requests
-from utils import url_to_root, articles_to_list
+from utils import url_to_root
 
 #when creating the crawler make sure the url does NOT include 'live-news'
-def scrape_article(url):
+def scrape_cnn_article(url):
     """
     This function takes a URL to a CNN news article and returns a
     dictionary with the title, source (CNN), date published, description, 
@@ -54,8 +54,11 @@ def articles_to_json(url_list):
     """
     Given a list of urls, write the respective article dictionaries to a json
     """
+    articles = []
 
-    articles = articles_to_list(url_list)
+    for url in url_list:
+        articles.append(scrape_cnn_article(url))
+
     #CHANGE LOCATION OF THIS WHEN OUT OF TEST PHASE
     with open("test_data/cnn_articles.json", "w") as f:
         json.dump(articles, f, indent=1)

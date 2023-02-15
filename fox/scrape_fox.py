@@ -1,9 +1,9 @@
 import json
 import lxml.html
 import requests
-from utils import url_to_root, articles_to_list
+from utils import url_to_root
 
-def scrape_article(url):
+def scrape_fox_article(url):
     """
     This function takes a URL to a FOX news article and returns a
     dictionary with the title, source (FOX), date published, description, 
@@ -32,8 +32,9 @@ def scrape_article(url):
     article['date'] = root.cssselect("time")[0].text_content().strip()
     article['description'] = root.xpath("/html/head/meta[7]/@content")[0]
     
-    #STILL NEED TO CLEAN
-    article['text'] = root.cssselect("div.article-content")[0].text_content().strip()
+    #Still need to remove article links and backslashes
+    text = root.cssselect("div.article-content")[0].text_content().strip()
+    article['text'] = text.replace(u'\xa0', u' ').replace("  "," ").replace(r"\'", "'")
 
     return article
 
@@ -41,7 +42,11 @@ def articles_to_json(url_list):
     """
     Given a list of urls, write the respective article dictionaries to a json
     """
-    articles = articles_to_list(url_list)
+    articles = []
+
+    for url in url_list:
+        articles.append(scrape_fox_article(url))
+
     #CHANGE LOCATION OF THIS WHEN OUT OF TEST PHASE
     with open("test_data/fox_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
