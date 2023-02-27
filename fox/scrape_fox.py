@@ -1,9 +1,9 @@
 import json
 import lxml.html
 import requests
+import re
 from utils import url_to_root
 
-#base_url = 'https://api.foxnews.com/search/web?q=January%206%20insurrection%20capitol+-filetype:amp+-filetype:xml+more:pagemap:metatags-prism.section&siteSearch=foxnews.com&siteSearchFilter=i&start=1&callback=__jp1'
 def get_page_url(base_url, page_number):
     """
     Given the fox api base url and a search result page number, get the url
@@ -45,7 +45,6 @@ def gather_urls(base_url):
     
     for i in range(10):
         page_number = i + 1
-        #print(page_number)
         page_info = api_json_to_dict(url, page_number)
         num_items = len(page_info['items'])
         for item in range(num_items):
@@ -88,10 +87,16 @@ def scrape_fox_article(url):
     
     #Still need to remove article links and backslashes
     text = root.cssselect("div.article-content")[0].text_content().strip()
-    article['text'] = text.replace(u'\xa0', u' ').replace("  "," ").replace("\'", "'")
+    text = text.replace(u'\xa0', u' ').replace("  "," ").replace("\'", "'")
+    text = text.replace('close   Video ', "")
+    text = text.replace('NEWYou can now listen to Fox News articles!\n', "")
+    text = text.replace('CLICK HERE TO GET THE FOX NEWS APP ', "")
+    text = text.replace(' Tucker Carlson currently serves as the host of FOX News Channel’s (FNC) Tucker Carlson Tonight (weekdays 8PM/ET). He joined the network in 2009 as a contributor.', "")
+    article['text'] = re.sub(r"[(\')]", "", text)
 
     return article
 
+#base_url = 'https://api.foxnews.com/search/web?q=January%206%20insurrection%20capitol+-filetype:amp+-filetype:xml+more:pagemap:metatags-prism.section&siteSearch=foxnews.com&siteSearchFilter=i&start=1&callback=__jp1'
 def crawl_fox(base_url):
     """
     Given a list of urls, write the respective article dictionaries to a json
@@ -104,7 +109,6 @@ def crawl_fox(base_url):
 
     with open("data/fox_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
-
 
 
 
