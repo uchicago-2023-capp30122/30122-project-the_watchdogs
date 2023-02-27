@@ -2,6 +2,7 @@ import json
 import lxml.html
 import requests
 from utils import url_to_root
+from bs4 import BeautifulSoup
 
 #when creating the crawler make sure the url does NOT include 'live-news'
 def scrape_cnn_article(url):
@@ -62,12 +63,4 @@ def articles_to_json(url_list):
     #CHANGE LOCATION OF THIS WHEN OUT OF TEST PHASE
     with open("test_data/cnn_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
-
-
-
-
-
-
-
-
 
