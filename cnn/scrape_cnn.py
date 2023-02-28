@@ -4,63 +4,80 @@ import requests
 from utils import url_to_root
 from bs4 import BeautifulSoup
 
+def crawl_cnn(base_url):
+    response = requests.get(base_url).text
+    response = json.loads(response)
+    results = response['result']
+
+    articles = []
+
+    for result in results:
+        a = {}
+        a['url'] = result['url']
+        a['source'] = 'CNN'
+        a['title'] = result['headline']
+        a['date'] = result['lastModifiedDate']
+        a['text'] = result['body']
+        articles.append(a)
+    
+    return articles
+
+
+
 #when creating the crawler make sure the url does NOT include 'live-news'
-def scrape_cnn_article(url):
+def scrape_cnn_result(url):
     """
-    This function takes a URL to a CNN news article and returns a
+    This function takes a URL to a CNN news result and returns a
     dictionary with the title, source (CNN), date published, description, 
     keywords, body of the text.
 
     Parameters:
-        * url:  a URL to a news article on CNN
+        * url:  a URL to a news result on CNN
 
     Returns:
         A dictionary with the following keys:
-            * url:          the URL of the news article page
-            * title:        the title of the article
+            * url:          the URL of the news result page
+            * title:        the title of the result
             * source:       the name of the media source (CNN in this case)
             * date:         the publish date
-            * description:  the description of the article
-            * keywords:     the search keywords for the article
-            * text:         the article text itself
+            * description:  the description of the result
+            * keywords:     the search keywords for the result
+            * text:         the result text itself
     """
 
-    article = {}
+    result = {}
     root = url_to_root(url)
 
-    article['url'] = url
-    article['title'] = root.cssselect("h1")[0].text_content().strip()
-    article['source'] = 'CNN'
-    article['description'] = root.xpath("/html/head/meta[6]/@content")[0]
+    result['url'] = url
+    result['title'] = root.cssselect("h1")[0].text_content().strip()
+    result['source'] = 'CNN'
+    result['description'] = root.xpath("/html/head/meta[6]/@content")[0]
     
     #change keywords to a list 
     keywords_string = root.xpath("/html/head/meta[21]/@content")[0]
-    article['keywords'] = keywords_string.split(", ")
+    result['keywords'] = keywords_string.split(", ")
     
     #clean and add date
     date = root.cssselect("div.timestamp")[0].text_content()
-    article['date'] = date.replace('\n', '').replace('  ', '').replace('Updated', '')
+    result['date'] = date.replace('\n', '').replace('  ', '').replace('Updated', '')
 
     #clean and add body text
-    text = root.cssselect("div.article__content")[0].text_content().strip()
+    text = root.cssselect("div.result__content")[0].text_content().strip()
     text = text.replace('\n', '').replace('  ', '')
-    article['text'] = text
+    result['text'] = text
     
-    #for mitch mcconnel article ... check to see if this in others
-    article['text'] = article['text'][13:]
+    #for mitch mcconnel result ... check to see if this in others
+    result['text'] = result['text'][13:]
 
-    return article
+    return result
 
-def articles_to_json(url_list):
+def results_to_json(base_url):
     """
-    Given a list of urls, write the respective article dictionaries to a json
+    Given a base url, write the respective result dictionaries to a json
     """
-    articles = []
 
-    for url in url_list:
-        articles.append(scrape_cnn_article(url))
+    articles = crawl_cnn(base_url)
 
-    #CHANGE LOCATION OF THIS WHEN OUT OF TEST PHASE
-    with open("test_data/cnn_articles.json", "w") as f:
+    with open("data/cnn_results.json", "w") as f:
         json.dump(articles, f, indent=1)
 
