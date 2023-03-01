@@ -57,6 +57,8 @@ def get_description(url):
 def check_date(date):
     """
     Check that a date is in desired range for research (Jan 6 2021 - Jan 7 2023)
+    **doing this here and not with FOX because CNN does not allow restrictions 
+    on date in searching**
 
     Input:
         date (datetime format): article date from last modified

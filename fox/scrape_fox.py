@@ -39,6 +39,13 @@ def api_json_to_dict(api_url, page_number):
 
 def gather_urls(base_url):
     """
+    Given a a url from a fox api, gather all the article urls from that page and 
+    all subsequent pages
+
+    Input:
+        base_url(str): the base url for the fox api (page 1)
+    Returns:
+        (list): a list of urls of fox api's site
     """
     url_list = []
     url = base_url
@@ -60,46 +67,48 @@ def scrape_fox_article(url):
     """
     This function takes a URL to a FOX news article and returns a
     dictionary with the title, source (FOX), date published, description, 
-    keywords, body of the text.
+    and body of the text.
 
-    Parameters:
-        * url:  a URL to a news article on FOX
+    Input:
+        result (dict): a dicitionary of a FOX article 
 
     Returns:
         A dictionary with the following keys:
-            * url:          the URL of the news article page
-            * title:        the title of the article
+            * url:          the URL of the article page
+            * title:        the title/headline of the article
             * source:       the name of the media source (FOX in this case)
-            * date:         the publish date
+            * date:         the most recently modified date
             * description:  the description of the article
-            * keywords:     the search keywords for the article
-            * text:         the article text itself
+            * text:         the article body text
     """
 
     article = {}
     root = url_to_root(url)
 
-    article['source'] = 'FOX'
     article['url'] = url
+    article['source'] = 'FOX'
     article['title'] = root.cssselect("h1")[0].text_content().strip()
-    article['date'] = root.cssselect("time")[0].text_content().strip()
     article['description'] = root.xpath("/html/head/meta[7]/@content")[0]
+    article['date'] = root.cssselect("time")[0].text_content().strip()
     
-    #Still need to remove article links and backslashes
-    text = root.cssselect("div.article-content")[0].text_content().strip()
-    text = text.replace(u'\xa0', u' ').replace("  "," ").replace("\'", "'")
-    text = text.replace('close   Video ', "")
-    text = text.replace('NEWYou can now listen to Fox News articles!\n', "")
-    text = text.replace('CLICK HERE TO GET THE FOX NEWS APP ', "")
-    text = text.replace(' Tucker Carlson currently serves as the host of FOX News Channel’s (FNC) Tucker Carlson Tonight (weekdays 8PM/ET). He joined the network in 2009 as a contributor.', "")
-    article['text'] = re.sub(r"[(\')]", "", text)
-
+    #clean and add body text
+    text = ''
+    for p in root.cssselect("p"):
+        if (p.getchildren() == []) and (p.get('class') == None):
+            text += str(p.text_content())
+    
+    article['text'] = text.replace("\xa0", "").replace("\"", "\'")
+    
     return article
 
 #base_url = 'https://api.foxnews.com/search/web?q=January%206%20insurrection%20capitol+-filetype:amp+-filetype:xml+more:pagemap:metatags-prism.section&siteSearch=foxnews.com&siteSearchFilter=i&start=1&callback=__jp1'
 def crawl_fox(base_url):
     """
-    Given a list of urls, write the respective article dictionaries to a json
+    Given the base url of a fox api, write the respective article dictionaries 
+    to a json
+
+    Input:
+        base_url(str): the base url for the fox api (page 1)
     """
     articles = []
     url_list = gather_urls(base_url)
@@ -109,7 +118,3 @@ def crawl_fox(base_url):
 
     with open("data/fox_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
-
-
-
-
