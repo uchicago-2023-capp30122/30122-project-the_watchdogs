@@ -15,7 +15,8 @@ nltk = "^3.8.1"
 pandas = "^1.5.3"
 dash = "^2.8.1"
 pathlib = "^1.0.1"
-
+plotly = "^5.13.1"
+ipykernel = "6.21.2"
 
 [build-system]
 requires = ["poetry-core"]

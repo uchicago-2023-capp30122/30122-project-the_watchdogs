@@ -1,5 +1,7 @@
 import sys
 print(sys.executable)
+if sys.path[-1] != '../':
+    sys.path.append('../')
 from clean import clean
 import pathlib
 import pandas as pd
