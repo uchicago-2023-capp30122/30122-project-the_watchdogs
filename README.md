@@ -4,11 +4,11 @@
 
 Critical to a functioning democracy, the job of the free press is to force the government to be accountable to whom it governs; a role commonly referred to as, watchdogs. However, as the modes of media consumption evolve, and American citizens become as polarized as ever, trust in national news media is declining. Coverage of the January 6th insurrection at the capitol and the events to follow made this issue glaring. There is even disagreement among the use of the word “insurrection” itself. Through the process of data scraping, we will gather articles that discuss the attack at the Capitol, the January 6th House Committee, and the trials of rioters, from the three most visited national news websites: The New York Times (NYT), CNN, and FOX News. We will then use token analysis to inspect the language used to describe this polarizing topic, and compare it across media sources, and over time. Finally, a data visualization component will be implemented allowing users to further examine our data, through the option of isolating variables, times, and topics.
 
-##Getting Started with the Virtual Environment
+## Getting Started with the Virtual Environment
 
-1. Clone the repository
-2. Run ``poetry install`` 
-3. Run ``poetry shell`` 
+1. Clone this repository.
+2. From the root directory, ``the_watchdogs``, run ``poetry install``.
+3. Run ``poetry shell``.
 
 ## Part 1: Gathering the Data
 
