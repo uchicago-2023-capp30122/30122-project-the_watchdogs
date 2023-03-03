@@ -43,6 +43,8 @@ def clean(json_file_name):
     source_name = df['source'][0]
     df['clean_text'].to_csv(f'data/{source_name}_corpus.txt', header=None, index=None, sep=' ', mode='a')
 
+    return df
+
 
 if __name__ == '__main__':
     # Map command line arguments to function arguments.
