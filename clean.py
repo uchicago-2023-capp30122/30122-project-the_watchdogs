@@ -6,6 +6,8 @@ import pandas as pd
 # nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from datetime import datetime
+
 
 def clean(json_file_name):
     """
@@ -26,6 +28,10 @@ def clean(json_file_name):
     # Load data into dataframe
     df = pd.DataFrame(data)
 
+    # Transform dates into useable format
+    df[['clean_date','time']] = df['date'].str.split("T",expand=True)
+    df['clean_date'] = df['clean_date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d'))
+
     # Strip spaces in text and make lowercase
     df.text = df.text.str.strip()
     df.text = df.text.str.lower()
@@ -38,7 +44,7 @@ def clean(json_file_name):
 
     # Remove stop words and all punctuation
     df['clean_text'] = df['clean_text'].apply(lambda x: [word for word in x if word not in stop_words and word.isalpha()])
-
+    
     # Save cleaned text to file
     source_name = df['source'][0]
     df['clean_text'].to_csv(f'data/{source_name}_corpus.txt', header=None, index=None, sep=' ', mode='a')
