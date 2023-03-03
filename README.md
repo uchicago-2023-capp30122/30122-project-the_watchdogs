@@ -16,11 +16,11 @@ In order to analyze coverage of the January 6th insurrection at the Capitol, art
 
 If you would like to run the scraper yourself, the code for completeing this can be found in each source's respective directory: ``cnn/scrape_cnn.py``, ``fox/scrape_fox.py``, and ``nyt/scrape_nyt.py``, and each of these sources can be scraped individually in the interpreter by running the following:
 
-``$ python3 -m cnn/scrape_cnn.py``
+``$ python3 -m cnn.scrape_cnn.py``
 
-``$ python3 -m fox/scrape_fox.py``
+``$ python3 -m fox.scrape_fox.py``
 
-``$ python3 -m nyt/scrape_nyt.py`` 
+``$ python3 -m nyt.scrape_nyt.py`` 
 
 or all at once:
 
