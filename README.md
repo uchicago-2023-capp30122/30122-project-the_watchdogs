@@ -8,7 +8,7 @@ Critical to a functioning democracy, the job of the free press is to force the g
 
 In order to analyze coverage of the January 6th insurrection at the Capitol, article data from NYT, CNN, and FOX must be gathered through the use of web scraping and/or an API. The code for completeing this can be found in each source's respective directory, ``cnn/scrape_cnn.py``, ``fox/scrape_fox.py``, and ``nyt/scrape_nyt.py``. However, each of these sources can be scraped individually in the interpreter by running the following:
 
-``$ python3 -m cnn/scrape_cnn.py`` 
+``$ python3 -m cnn/scrape_cnn.py`` '\n'
 ``$ python3 -m fox/scrape_fox.py``
 ``$ python3 -m nyt/scrape_nyt.py`` 
 
@@ -17,3 +17,11 @@ or all at once:
 ``$ python3 -m scrape_sources.py``
 
 This can take a few minutes to run so we have saved the json files down in the ``data`` directory.
+
+## Part 2: Token and Sentiment Analysis
+
+xx
+
+## Part 3: Data Visualization
+
+xx
