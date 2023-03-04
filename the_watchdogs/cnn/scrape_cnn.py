@@ -1,43 +1,13 @@
+
+##the following code was written by lindsey
+
+import sys
 import json
 import lxml.html
 import requests
+import dateutil
 from utils import url_to_root
-from bs4 import BeautifulSoup
-import dateutil.parser
-from datetime import datetime
-
-def scrape_cnn_result(result):
-    """
-    Given a result json from the CNN api, scrape the article and create a dictionary
-
-    Input:
-        result (dict): a dicitionary of a CNN article 
-
-    Returns:
-        A dictionary with the following keys:
-            * url:          the URL of the article page
-            * title:        the title/headline of the article
-            * source:       the name of the media source (CNN in this case)
-            * date:         the most recently modified date
-            * description:  the description of the article
-            * text:         the article body text
-    """
-
-    article = {}
-    #get the info from the json
-    article['url'] = result['url']
-    article['source'] = 'CNN'
-    article['title'] = result['headline']
-    article['description'] = result['description']
-
-    #change date format to match FOX format
-    article['date'] = result['lastModifiedDate'].strftime("%B %d, %Y %I:%M%p %Z")
-
-    #clean and add body text
-    b = bytes(result['body'], encoding = "utf-8")
-    article['text'] = str(b, encoding = "ascii", errors = "ignore")
-
-    return article
+from .cnn_utils import check_date, scraping_conditions, get_next_url
 
 def get_description(url):
     """
@@ -54,58 +24,41 @@ def get_description(url):
 
     return description
 
-def check_date(date):
+def scrape_cnn_result(result):
     """
-    Check that a date is in desired range for research (Jan 6 2021 - Jan 7 2023)
-    **doing this here and not with FOX because CNN does not allow restrictions 
-    on date in searching**
-
-    Input:
-        date (datetime format): article date from last modified
-    
-    Returns:
-        (bool): True if date is in range
-                False otherwise
-    """
-    if date.year in range(2021, 2023):
-        if (date.year == 2023):
-            if (date.month) > 1:
-                return True
-            elif (date.day <= 7):
-                return True
-            else:
-                return False
-        if (date.year == 2021):
-            if (date.month) > 1:
-                return True
-            elif (date.day >= 6):
-                return True
-            else:
-                return False
-    else:
-        return False
-
-def scraping_conditions(result):
-    """
-    Check attributes of the article to ensure it is scrapable
+    Given a result json from the CNN api, scrape the article and create a dictionary
+    This function takes a URL to a CNN api and returns a dictionary with the title, 
+    source (CNN), date published, description, and body of the text.
 
     Input:
         result (dict): a dicitionary of a CNN article 
 
     Returns:
-        (bool): True if meets scraping conditions
-                False otherwise
+        A dictionary with the following keys:
+            * url:          the URL of the article page
+            * title:        the title/headline of the article
+            * source:       the name of the media source (CNN in this case)
+            * date:         the most recently modified date
+            * description:  the description of the article
+            * text:         the article body text
     """
-    date = result['lastModifiedDate']
-    media_type = result['type']
-    description = result['description']
-    headline = result['headline']
-    
-    if ((media_type == 'article') and (description != 'unsafe-url') and 
-        (headline[:16] != '5 things to know') and (check_date(date))):
-        return True
-    else:
-        return False
+
+    article = {}
+    #get the info from the api
+    article['url'] = result['url']
+    article['source'] = 'CNN'
+    article['title'] = result['headline']
+    article['description'] = result['description']
+
+    #change date format to match FOX format
+    article['date'] = result['lastModifiedDate'].strftime("%B %d, %Y %I:%M%p %Z")
+    print(article['title'], article['date'])
+
+    #clean and add body text
+    b = bytes(result['body'], encoding = "utf-8")
+    article['text'] = str(b, encoding = "ascii", errors = "ignore").replace("\"", "\'").strip()
+
+    return article
 
 def scrape_page(url):
     """
@@ -129,6 +82,7 @@ def scrape_page(url):
         result['description'] = get_description(result['url'])
         
         if scraping_conditions(result):
+            #add in info from the api
             articles.append(scrape_cnn_result(result))
     
     return articles
@@ -142,12 +96,13 @@ def crawl_cnn(url):
     """
     response = requests.get(url).text
     response = json.loads(response)
+
+    #get meta data on search results
     meta = response['meta']
-    
+    articles_per_page = response['meta']['total']
+    total_articles = meta['of']
 
     #calculate max pages to crawl
-    articles_per_page = meta['total']
-    total_articles = meta['of']
     pages = total_articles / articles_per_page
     max_pages = total_articles // articles_per_page
     if pages % 1 != 0:
@@ -155,15 +110,29 @@ def crawl_cnn(url):
 
     articles = []
     for page_num in range(1, max_pages + 1):
-        #generate new url
-        url_parts = url.split('&')
-        start = int(url_parts[2][5:])
-        new_start = ['from=' + str(start + articles_per_page)]
-        new_page = ['page=' + str(page_num + 1)]
-        url_lst = url_parts[:2] + new_start + new_page + url_parts[-2:]
-        url = "&".join(url_lst)
-        #get articles from the next page and add to the list
-        articles += scrape_page(url)
+        scraped_articles = scrape_page(url)
+        articles += scraped_articles
+        url = get_next_url(url, page_num, articles_per_page)
+
+    return articles
+
+def cnn_articles_to_json():
+    """
+    Write the scraped articles to a json file in the data directory
+    """
+    url = 'https://search.api.cnn.com/content?q=insurrection%20january%206th&size=50&from=0&page=1sort=relevancy&sections=politics&types=article'
+    articles = crawl_cnn(url)
 
     with open("data/cnn_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
+
+if __name__ == "__main__":
+    """
+    Scrape CNN files
+    """
+    if len(sys.argv) != 1:
+        print("Usage: python -m cnn.scrape_cnn")
+        sys.exit(1)
+    print("Scraping CNN articles...this may take a few minutes.")
+    cnn_articles_to_json()
+    print("Articles successfully scraped. Output written to data/cnn_articles.json")
