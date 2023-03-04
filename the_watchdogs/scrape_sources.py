@@ -1,6 +1,6 @@
 import sys
-from cnn.scrape_cnn import cnn_articles_to_json
-from fox.scrape_fox import fox_articles_to_json
+from .cnn.scrape_cnn import cnn_articles_to_json
+from .fox.scrape_fox import fox_articles_to_json
 
 if __name__ == "__main__":
     """
