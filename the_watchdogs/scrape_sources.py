@@ -1,3 +1,6 @@
+
+#this code was written by lindsey
+
 import sys
 from .cnn.scrape_cnn import cnn_articles_to_json
 from .fox.scrape_fox import fox_articles_to_json
