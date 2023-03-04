@@ -5,7 +5,7 @@ import sys
 import json
 import lxml.html
 import requests
-from .utils import url_to_root
+from utils import url_to_root
 from .fox_utils import generate_search_urls, get_page_url, api_json_to_dict, gather_urls
 
 def scrape_fox_article(url, scraped_titles):
