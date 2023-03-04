@@ -1,5 +1,5 @@
 import sys
-from the_watchdogs.clean import clean
+from the_watchdogs.preprocess import clean
 import pathlib
 import pandas as pd
 import plotly.express as px
