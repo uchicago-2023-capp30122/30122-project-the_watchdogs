@@ -17,6 +17,7 @@ dash = "^2.8.1"
 pathlib = "^1.0.1"
 plotly = "^5.13.1"
 ipykernel = "6.21.2"
+wordcloud = "^1.8.2.2"
 
 [build-system]
 requires = ["poetry-core"]
