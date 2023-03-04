@@ -1,3 +1,6 @@
+
+#the following code was written by lindsey
+
 import requests
 import lxml.html
 
