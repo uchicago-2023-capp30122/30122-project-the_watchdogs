@@ -6,7 +6,7 @@ import json
 import lxml.html
 import requests
 import dateutil
-from utils import url_to_root
+from the_watchdogs.utils import url_to_root
 from .cnn_utils import check_date, scraping_conditions, get_next_url
 
 def get_description(url):
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     Scrape CNN files
     """
     if len(sys.argv) != 1:
-        print("Usage: python -m cnn.scrape_cnn")
+        print("Usage: python -m the_watchdogs.cnn.scrape_cnn")
         sys.exit(1)
     print("Scraping CNN articles...this may take a few minutes.")
     cnn_articles_to_json()
