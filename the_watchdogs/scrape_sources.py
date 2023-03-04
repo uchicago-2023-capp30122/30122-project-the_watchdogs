@@ -12,4 +12,4 @@ if __name__ == "__main__":
     print("Scraping articles...this will take a few minutes.")
     fox_articles_to_json()
     cnn_articles_to_json()
-    print("Articles successfully scraped. Output written to data/fox_articles.json and data/cnn_articles.json")
+    print("Articles successfully scraped. Output written to the_watchdogs/data/fox_articles.json and the_watchdogs/data/cnn_articles.json")
