@@ -14,15 +14,15 @@ Critical to a functioning democracy, the job of the free press is to force the g
 
 In order to analyze coverage of the January 6th insurrection at the Capitol, article data from NYT, CNN, and FOX must be gathered through the use of web scraping and/or an API. This process can take several minutes to run, so we have saved the json files down in the ``data`` directory. 
 
-If you would like to run the scraper yourself, the code for completeing this can be found in each source's respective directory: ``cnn/scrape_cnn.py``, and ``fox/scrape_fox.py``, and each of these sources can be scraped individually in the interpreter by running the following:
+If you would like to run the scraper yourself, the code for completeing this can be found in each source's respective directory: ``the_watchdogs/cnn/scrape_cnn.py``, and ``the_watchdogs/fox/scrape_fox.py``, and each of these sources can be scraped individually in the interpreter by running the following:
 
-``$ python3 -m cnn.scrape_cnn``
+``$ python3 -m the_watchdogs.cnn.scrape_cnn``
 
-``$ python3 -m fox.scrape_fox``
+``$ python3 -m the_watchdogs.fox.scrape_fox``
 
 or all at once:
 
-``$ python3 -m scrape_sources``
+``$ python3 -m the_watchdogs.scrape_sources``
 
 
 ## Part 2: Token and Sentiment Analysis
