@@ -52,7 +52,6 @@ def scrape_cnn_result(result):
 
     #change date format to match FOX format
     article['date'] = result['lastModifiedDate'].strftime("%B %d, %Y %I:%M%p %Z")
-    print(article['title'], article['date'])
 
     #clean and add body text
     b = bytes(result['body'], encoding = "utf-8")
