@@ -91,7 +91,7 @@ def fox_articles_to_json():
 
     articles = crawl_fox(base_url, single_keywords, paired_keywords)
 
-    with open("data/fox_articles.json", "w") as f:
+    with open("the_watchdogs/data/fox_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
 
 if __name__ == "__main__":
@@ -103,4 +103,4 @@ if __name__ == "__main__":
         sys.exit(1)
     print("Scraping FOX articles...this may take a few minutes.")
     fox_articles_to_json()
-    print("Articles successfully scraped. Output written to data/fox_articles.json")
+    print("Articles successfully scraped. Output written to the_watchdogs/data/fox_articles.json")
