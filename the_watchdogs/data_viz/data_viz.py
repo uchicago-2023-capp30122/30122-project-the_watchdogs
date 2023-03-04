@@ -47,7 +47,7 @@ def word_count():
     """
     docstring
     """
-    
+
     text_cnn = df_cnn.clean_text.str.replace('[','').str.replace(']','').str.replace("'",'')
     text_fox = df_fox.clean_text.str.replace('[','').str.replace(']','').str.replace("'",'')
 
@@ -94,4 +94,5 @@ def create_sentiment():
 
     cnn_count = pd.Series(Counter(text_cnn)).sort_values(ascending = False)
     fox_count = pd.Series(Counter(text_fox)).sort_values(ascending = False)
+    
     return cnn_count, fox_count
