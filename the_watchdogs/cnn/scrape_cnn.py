@@ -122,7 +122,7 @@ def cnn_articles_to_json():
     url = 'https://search.api.cnn.com/content?q=insurrection%20january%206th&size=50&from=0&page=1sort=relevancy&sections=politics&types=article'
     articles = crawl_cnn(url)
 
-    with open("data/cnn_articles.json", "w") as f:
+    with open("the_watchdogs/data/cnn_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
 
 if __name__ == "__main__":
