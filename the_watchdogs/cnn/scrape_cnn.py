@@ -6,7 +6,7 @@ import json
 import lxml.html
 import requests
 import dateutil
-from .utils import url_to_root
+from utils import url_to_root
 from .cnn_utils import check_date, scraping_conditions, get_next_url
 
 def get_description(url):
