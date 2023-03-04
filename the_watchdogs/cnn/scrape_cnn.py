@@ -134,4 +134,4 @@ if __name__ == "__main__":
         sys.exit(1)
     print("Scraping CNN articles...this may take a few minutes.")
     cnn_articles_to_json()
-    print("Articles successfully scraped. Output written to data/cnn_articles.json")
+    print("Articles successfully scraped. Output written to the_watchdogs/data/cnn_articles.json")
