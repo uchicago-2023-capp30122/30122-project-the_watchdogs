@@ -1,69 +1,14 @@
+
+#the following code was written by lindsey
+
+import sys
 import json
 import lxml.html
 import requests
-import re
 from utils import url_to_root
+from .fox_utils import generate_search_urls, get_page_url, api_json_to_dict, gather_urls
 
-def get_page_url(base_url, page_number):
-    """
-    Given the fox api base url and a search result page number, get the url
-
-    Input:
-        base_url (str): the base url
-        page_number (int): the page number
-    
-    Returns:
-        (str): the desired url
-    """
-    if page_number > 10:
-        return KeyError('Page number cannot be greater than 10')
-    else:
-        new_url = base_url.replace(f'&start=1&callback=__jp1', f'&start={page_number - 1}1&callback=__jp{page_number}')
-        return new_url
-
-def api_json_to_dict(api_url, page_number):
-    """
-    Given an api.foxnews.com url, create a dictionary of the page information
-
-    Input:
-        api_url (str): the url 
-        page_number (int): page number in search results where 0 is the base_url
-    
-    Returns:
-        (dict): a dictionary of the page info
-    """
-    response = requests.get(api_url).text
-    response = response.replace(f'// API callback\n__jp{page_number}(', '')[:-2]
-
-    return json.loads(response)
-
-def gather_urls(base_url):
-    """
-    Given a a url from a fox api, gather all the article urls from that page and 
-    all subsequent pages
-
-    Input:
-        base_url(str): the base url for the fox api (page 1)
-    Returns:
-        (list): a list of urls of fox api's site
-    """
-    url_list = []
-    url = base_url
-    
-    for i in range(10):
-        page_number = i + 1
-        page_info = api_json_to_dict(url, page_number)
-        num_items = len(page_info['items'])
-        for item in range(num_items):
-            url = page_info['items'][item]['link']
-            #ensure the url is to a news article and is not live
-            if ('/category/' not in url) and ('/live-news/' not in url):  
-                url_list.append(url)
-        url = get_page_url(base_url, page_number + 1)
-    
-    return url_list
-
-def scrape_fox_article(url):
+def scrape_fox_article(url, scraped_titles):
     """
     This function takes a URL to a FOX news article and returns a
     dictionary with the title, source (FOX), date published, description, 
@@ -88,21 +33,23 @@ def scrape_fox_article(url):
     article['url'] = url
     article['source'] = 'FOX'
     article['title'] = root.cssselect("h1")[0].text_content().strip()
-    article['description'] = root.xpath("/html/head/meta[7]/@content")[0]
-    article['date'] = root.cssselect("time")[0].text_content().strip()
-    
-    #clean and add body text
-    text = ''
-    for p in root.cssselect("p"):
-        if (p.getchildren() == []) and (p.get('class') == None):
-            text += str(p.text_content())
-    
-    article['text'] = text.replace("\xa0", "").replace("\"", "\'")
-    
-    return article
+    #if article hasn't been scraped, create a dicitonary and add to list
+    if article['title'] not in scraped_titles:
+        article['description'] = root.xpath("/html/head/meta[7]/@content")[0]
+        article['date'] = root.cssselect("time")[0].text_content().strip()
+        #clean and add body text
+        text = ''
+        for p in root.cssselect("p"):
+            if (p.getchildren() == []) and (p.get('class') == None):
+                text += str(p.text_content())
+                text += ' '
+        
+        article['text'] = text.replace("\xa0", "").replace("\"", "\'").strip()
+        return article
+    else:
+        return None
 
-#base_url = 'https://api.foxnews.com/search/web?q=January%206%20insurrection%20capitol+-filetype:amp+-filetype:xml+more:pagemap:metatags-prism.section&siteSearch=foxnews.com&siteSearchFilter=i&start=1&callback=__jp1'
-def crawl_fox(base_url):
+def scrape_page(base_url, scraped_titles):
     """
     Given the base url of a fox api, write the respective article dictionaries 
     to a json
@@ -111,10 +58,49 @@ def crawl_fox(base_url):
         base_url(str): the base url for the fox api (page 1)
     """
     articles = []
+    
     url_list = gather_urls(base_url)
-
     for url in url_list:
-        articles.append(scrape_fox_article(url))
+        article = scrape_fox_article(url, scraped_titles)
+        if article != None:
+            articles.append(article)
+            scraped_titles.add(article['title'])
+
+    return articles, scraped_titles
+
+def crawl_fox(base_url, single_keywords, paired_keywords):
+    """
+    """
+    urls = generate_search_urls(base_url, single_keywords, paired_keywords)
+
+    article_data = []
+    scraped_titles = set()
+
+    for url in urls:
+        articles, scraped_titles = scrape_page(url, scraped_titles)
+        article_data += articles
+    
+    return article_data
+
+def fox_articles_to_json():
+    """
+    """
+    base_url = 'https://api.foxnews.com/search/web?q=January%206%20insurrection%20capitol+-filetype:amp+-filetype:xml+more:pagemap:metatags-prism.section&siteSearch=foxnews.com&siteSearchFilter=i&start=1&callback=__jp1'
+    single_keywords = ['trump', 'capitol', 'riot', 'insurrection']
+    paired_keywords = [['january', '6'], ['jan', '6']]
+
+    articles = crawl_fox(base_url, single_keywords, paired_keywords)
 
     with open("data/fox_articles.json", "w") as f:
         json.dump(articles, f, indent=1)
+
+if __name__ == "__main__":
+    """
+    Scrape FOX articles 
+    """
+    if len(sys.argv) != 1:
+        print("Usage: python -m fox.scrape_fox")
+        sys.exit(1)
+    print("Scraping FOX articles...this may take a few minutes.")
+    fox_articles_to_json()
+    print("Articles successfully scraped. Output written to data/fox_articles.json")
