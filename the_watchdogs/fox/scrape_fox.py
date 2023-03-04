@@ -5,7 +5,7 @@ import sys
 import json
 import lxml.html
 import requests
-from utils import url_to_root
+from the_watchdogs.utils import url_to_root
 from .fox_utils import generate_search_urls, get_page_url, api_json_to_dict, gather_urls
 
 def scrape_fox_article(url, scraped_titles):
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     Scrape FOX articles 
     """
     if len(sys.argv) != 1:
-        print("Usage: python -m fox.scrape_fox")
+        print("Usage: python -m the_watchdogs.fox.scrape_fox")
         sys.exit(1)
     print("Scraping FOX articles...this may take a few minutes.")
     fox_articles_to_json()
