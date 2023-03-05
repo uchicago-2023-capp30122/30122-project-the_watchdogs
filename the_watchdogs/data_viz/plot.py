@@ -38,8 +38,8 @@ def plot_sentiment():
                  category_orders={'index': category_order}, color_discrete_map=color_discrete_map)
     fig.update_layout(title='Sentiment Analysis by News Source', xaxis_title='Sentiment',
                       yaxis_title='Number of Articles')
-    # Return statement:
 
+    # Return statement:
     return fig
 
 
@@ -60,6 +60,34 @@ def plot_month_year():
     fig.update_traces(mode='lines+markers')
 
     # Adding a toggle by year:
+    fig.update_layout(
+        updatemenus=[
+            dict(
+                buttons=list([
+                    dict(label = 'All',
+                        method = 'update',
+                        args = [{'visible': [True, True, True, False, True, True, True]},
+                                {'title': 'Overall',
+                                'showlegend':True}]),
+                    dict(label = '2021',
+                        method = 'update',
+                        args = [{'visible': [True, False, False, False, True, False, False]},
+                                {'title': '2021',
+                                'showlegend':True}]),
+                    dict(label = '2022',
+                        method = 'update',
+                        args = [{'visible': [False, True, False, False, False, True, False]},
+                                {'title': '2022',
+                                'showlegend':True}]),
+                    dict(label = '2023',
+                        method = 'update',
+                        args = [{'visible': [False, False, True, False, False, False, True]},
+                                {'title': '2023',
+                                'showlegend':True}]),
+                ])
+            )
+       ]
+    )
 
     # Return statement:
     return fig
