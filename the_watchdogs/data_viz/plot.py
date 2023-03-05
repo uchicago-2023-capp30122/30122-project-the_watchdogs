@@ -31,9 +31,11 @@ def plot_sentiment():
     category_order = ["Very Negative", "Slightly Negative", "Neutral", "Slightly Positive", "Very Positive"]
 
     # Creating the bar graph:
+    color_discrete_map = {'CNN': 'rgb(204, 0, 0)', 'FOX': 'rgb(0, 51, 102)'}
+
     fig = px.bar(df, x=df.index, y=["CNN", "FOX"],
                  barmode='group', labels={'value': 'Frequency'},
-                 category_orders={'index': category_order})
+                 category_orders={'index': category_order}, color_discrete_map=color_discrete_map)
     fig.update_layout(title='Sentiment Analysis by News Source', xaxis_title='Sentiment',
                       yaxis_title='Number of Articles')
 
