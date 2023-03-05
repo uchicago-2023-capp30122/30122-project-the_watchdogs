@@ -1,9 +1,6 @@
-# Code by Tiwaa
-
 import sys
 import json
 import pandas as pd
-# import nltk
 #Download stopwords, punkt and vader_lexicon if you haven't already
 # nltk.download('stopwords')
 # nltk.download('punkt')
@@ -42,10 +39,8 @@ def preprocess(json_file_name):
     df.text = df.text.str.lower()
 
     # Set language for stop words
-    stop_words = stopwords.words('english')
-    stop_words.extend(['said', 'going', 'would', 'could', 'fox', 'cnn', 'told'
-    , 'cnn', 'fox', 'attack', 'also', 'could', 'let', 'first', 'one', 'time',
-    'two', 'know', 'take'])
+    stop_words = set(stopwords.words('english'))
+    stop_words.extend(['said', 'going', 'would'])
 
     # Get raw sentiment analysis score
     sid = SentimentIntensityAnalyzer()
