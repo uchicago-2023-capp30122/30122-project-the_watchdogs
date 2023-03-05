@@ -1,7 +1,7 @@
 # Rohit Kandala (cnet: "rohitk") wrote the code in this file. 
 
 import sys
-from data_viz import create_sentiment, create_date, word_count
+from data_viz_prep import create_sentiment, create_date, word_count
 from app import app
 from wordcloud import WordCloud
 import pathlib
