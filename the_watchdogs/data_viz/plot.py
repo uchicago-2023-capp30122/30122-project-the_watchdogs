@@ -64,25 +64,25 @@ def plot_month_year():
         updatemenus=[
             dict(
                 buttons=list([
-                    dict(label = 'All',
+                    dict(label = 'All Years',
                         method = 'update',
                         args = [{'visible': [True, True, True, False, True, True, True]},
-                                {'title': 'Overall',
+                                {'title': 'Articles by Year',
                                 'showlegend':True}]),
-                    dict(label = '2021',
+                    dict(label = '2021 Articles',
                         method = 'update',
                         args = [{'visible': [True, False, False, False, True, False, False]},
-                                {'title': '2021',
+                                {'title': 'Articles from 2021',
                                 'showlegend':True}]),
-                    dict(label = '2022',
+                    dict(label = '2021 Articles',
                         method = 'update',
                         args = [{'visible': [False, True, False, False, False, True, False]},
-                                {'title': '2022',
+                                {'title': 'Articles from 2022',
                                 'showlegend':True}]),
-                    dict(label = '2023',
+                    dict(label = '2021 Articles',
                         method = 'update',
                         args = [{'visible': [False, False, True, False, False, False, True]},
-                                {'title': '2023',
+                                {'title': 'Articles from 2023',
                                 'showlegend':True}]),
                 ])
             )
