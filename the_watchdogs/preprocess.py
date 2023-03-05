@@ -40,6 +40,7 @@ def preprocess(json_file_name):
 
     # Set language for stop words
     stop_words = set(stopwords.words('english'))
+    stop_words.extend(['said', 'going', 'would'])
 
     # Get raw sentiment analysis score
     sid = SentimentIntensityAnalyzer()
