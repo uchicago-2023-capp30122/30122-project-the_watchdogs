@@ -30,6 +30,8 @@ or all at once:
 To transform the raw data scraped from articles on Fox and CNN into a useable cleaned format run the following:
 
 ``$ python3 preprocess.py data\fox_articles.json``
+
+
 ``$ python3 preprocess.py data\cnn_articles.json``
 
 This creates two respective dataframes of cleaned data for each news source in the the data folder.
