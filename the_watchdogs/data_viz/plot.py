@@ -57,7 +57,7 @@ def plot_month_year():
     df = create_date()
 
     # Creating the line graph:
-    fig = px.line(df, x=df.index, y=['CNN 2021', 'CNN 2022', 'CNN 2023', 'FOX 2020', 'FOX 2021', 'FOX 2022', 'FOX 2023'],
+    fig = px.line(df, x=df.index, y=['CNN 2021', 'CNN 2022', 'CNN 2023', 'FOX 2021', 'FOX 2022', 'FOX 2023'],
                   title='Article Count by Month', line_group="variable", color="variable",
                   color_discrete_map={"CNN 2021": "rgb(204, 0, 0)", "CNN 2022": "rgb(204, 0, 0)", "CNN 2023": "rgb(204, 0, 0)",
                                      "FOX 2021": "rgb(0, 51, 102)", "FOX 2022": "rgb(0, 51, 102)", "FOX 2023": "rgb(0, 51, 102)"})
