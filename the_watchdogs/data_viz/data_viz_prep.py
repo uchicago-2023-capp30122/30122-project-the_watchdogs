@@ -70,7 +70,7 @@ def create_date():
     fox_count = pd.Series(Counter(text_fox)).reset_index().set_index('level_0')
 
     # Creating a standerdized months:
-    months = ['January','February','March','April','May','July','August','September','October','November','December']
+    months = ['January','February','March','April','May','June', 'July','August','September','October','November','December']
     ind_cnn = cnn_count.level_1
     ind_fox = fox_count.level_1
     cnn_count = cnn_count[0]
