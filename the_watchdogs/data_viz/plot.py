@@ -53,7 +53,7 @@ def plot_month_year():
         users can toggle the year!
     """
 
-    # Calling in function from **, and saving it into a dataframe:
+    # Calling in function from data_viz_prep, and saving it into a dataframe:
     df = create_date()
 
     # Creating the line graph:
