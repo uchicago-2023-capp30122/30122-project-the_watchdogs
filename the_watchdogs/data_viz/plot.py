@@ -98,7 +98,7 @@ def plot_month_year():
         ]
     )
 
-    # Updating axis labels:
+    # Updating axes labels:
     fig.update_layout(xaxis_title="Month", yaxis_title="Article Count", title_x=0.5)
 
     # Return statement:
@@ -145,12 +145,13 @@ def plot_wordcloud_fox():
 
 ### BELOW IS THE SETUP CODE FOR DASH ###
 
-
+# Setting data viz function returns as variables
 cnn_wordcloud = plot_wordcloud_cnn()
 fox_wordcloud = plot_wordcloud_fox()
 plot_month_year = plot_month_year()
 plot_sentiment = plot_sentiment()
 
+# HTML page setup :) : 
 app = Dash(external_stylesheets = [dbc.themes.SIMPLEX])
 app.layout = dbc.Container([
 

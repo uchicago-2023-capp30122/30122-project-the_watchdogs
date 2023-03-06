@@ -8,7 +8,7 @@ from collections import Counter
 
 # These functions below take in the csvs that are the csvs that are created
 # from "preprocess", and format the csvs so that they're fit to use as Pandas
-# Series in the file "__main__.py" for data visulization. 
+# data structures in the file "__main__.py" for data visulization. 
 
 # Loading in the data and setting them as global dataframe variables:
 cnn_data = pathlib.Path(__file__).parent / "../data/CNN_clean_df.csv"
