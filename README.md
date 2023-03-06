@@ -29,10 +29,10 @@ or all at once:
 
 To transform the raw data scraped from articles on Fox and CNN into a useable cleaned format run the following:
 
-``$ python3 the_watchdogs/preprocess.py data/fox_articles.json``
+``$ python3 the_watchdogs/preprocess.py the_watchdogs/data/fox_articles.json``
 
 
-``$ python3 the_watchdogs/preprocess.py data/cnn_articles.json``
+``$ python3 the_watchdogs/preprocess.py the_watchdogs/data/cnn_articles.json``
 
 This creates two respective dataframes of cleaned data for each news source in the the data folder in the_watchdogs folder.
 
