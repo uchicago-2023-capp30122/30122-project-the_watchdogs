@@ -1,8 +1,8 @@
 # Rohit Kandala (cnet: "rohitk") wrote the code in this file. 
 
 import sys
-from data_viz_prep import create_sentiment, create_date, word_count
-from app import app
+from .data_viz_prep import create_sentiment, create_date, word_count
+from .app import app
 from wordcloud import WordCloud
 import pathlib
 from dash import Dash, html, dcc
