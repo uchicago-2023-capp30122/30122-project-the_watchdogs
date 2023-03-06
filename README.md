@@ -38,4 +38,12 @@ This creates two respective dataframes of cleaned data for each news source in t
 
 ## Part 3: Data Visualization
 
-xx
+To visualize the analyzed data, please run the following command:
+
+``$ python3 -m the_watchdogs.data_viz.plot``
+
+This will open a port (7991) on the Flask app, and you will be able to see three plots:
+
+1. Two word clouds, one with CNN data, and one with FOX data. 
+2. A line graph showing the number of articles by source, and you can toggle the year.
+3. A bar graph showing the sentiments (5 categories) by news source. 
