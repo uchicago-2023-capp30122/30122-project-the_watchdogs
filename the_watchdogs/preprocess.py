@@ -61,11 +61,12 @@ def preprocess(json_file_name):
     
     # Save cleaned text and dataframe to separate files
     source_name = df['source'][0]
-    df['clean_text'].to_csv(f'data/{source_name}_corpus.txt', header=None, index=None, sep=' ', mode='a')
-    df.to_csv(f'data/{source_name}_clean_df.csv', index=False)
+    df['clean_text'].to_csv(f'the_watchdogs/data/{source_name}_corpus.txt', header=None, index=None, sep=' ', mode='a')
+    df.to_csv(f'the_watchdogs/data/{source_name}_clean_df.csv', index=False)
 
     
 
 if __name__ == '__main__':
     # Map command line arguments to function arguments.
     preprocess(sys.argv[1])
+    print ("Cleaned CSV has been created")
