@@ -57,7 +57,7 @@ def plot_month_year():
     df = create_date()
 
     # Creating the line graph:
-    fig = px.line(df, x=df.index, y=['CNN 2021', 'CNN 2022', 'CNN 2023', 'FOX 2020', 'FOX 2021', 'FOX 2022', 'FOX 2023'],
+    fig = px.line(df, x=df.index, y=['CNN 2021', 'CNN 2022', 'CNN 2023', 'FOX 2021', 'FOX 2022', 'FOX 2023'],
                   title='Article Count by Month', line_group="variable", color="variable",
                   color_discrete_map={"CNN 2021": "rgb(204, 0, 0)", "CNN 2022": "rgb(204, 0, 0)", "CNN 2023": "rgb(204, 0, 0)",
                                      "FOX 2021": "rgb(0, 51, 102)", "FOX 2022": "rgb(0, 51, 102)", "FOX 2023": "rgb(0, 51, 102)"})
@@ -70,22 +70,22 @@ def plot_month_year():
                 buttons=list([
                     dict(label='All Years',
                          method='update',
-                         args=[{'visible': [True, True, True, False, True, True, True]},
+                         args=[{'visible': [True, True, True, True, True, True]},
                                {'title': 'Articles by Year',
                                 'showlegend': True}]),
                     dict(label='2021',
                          method='update',
-                         args=[{'visible': [True, False, False, False, True, False, False]},
+                         args=[{'visible': [True, False, False, True, False, False]},
                                {'title': 'Articles from 2021',
                                 'showlegend': True}]),
                     dict(label='2022',
                          method='update',
-                         args=[{'visible': [False, True, False, False, False, True, False]},
+                         args=[{'visible': [False, True, False, False, True, False]},
                                {'title': 'Articles from 2022',
                                 'showlegend': True}]),
                     dict(label='2023',
                          method='update',
-                         args=[{'visible': [False, False, True, False, False, False, True]},
+                         args=[{'visible': [False, False, True, False, False, True]},
                                {'title': 'Articles from 2023',
                                 'showlegend': True}]),
                 ]),
