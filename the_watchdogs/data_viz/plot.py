@@ -22,7 +22,7 @@ def plot_sentiment():
         articles on the y-axis. 
     """
 
-    # Calling in function from **, and concatinating into a dataframe:
+    # Calling in function from data_viz_prep, and concatinating into a dataframe:
     cnn_count, fox_count = create_sentiment()
     df = pd.concat([cnn_count, fox_count], axis=1)
     df.columns = ["CNN", "FOX"]
@@ -36,8 +36,9 @@ def plot_sentiment():
     fig = px.bar(df, x=df.index, y=["CNN", "FOX"],
                  barmode='group', labels={'value': 'Frequency'},
                  category_orders={'index': category_order}, color_discrete_map=color_discrete_map)
-    fig.update_layout(title='Sentiment Analysis by News Source', xaxis_title='Sentiment',
-                      yaxis_title='Number of Articles')
+    fig.update_layout(title={'text': 'Sentiment Analysis by News Source', 'x': 0.5, 'y': 0.9, 'xanchor': 'center', 'yanchor': 'top'},
+                      xaxis_title={'text': 'Sentiment', 'standoff': 10},
+                      yaxis_title={'text': 'Number of Articles', 'standoff': 10})
 
     # Return statement:
     return fig
@@ -56,7 +57,10 @@ def plot_month_year():
     df = create_date()
 
     # Creating the line graph:
-    fig = px.line(df, title='Article Count by Month')
+    fig = px.line(df, x=df.index, y=['CNN 2021', 'CNN 2022', 'CNN 2023', 'FOX 2020', 'FOX 2021', 'FOX 2022', 'FOX 2023'],
+                  title='Article Count by Month', line_group="variable", color="variable",
+                  color_discrete_map={"CNN 2021": "rgb(204, 0, 0)", "CNN 2022": "rgb(204, 0, 0)", "CNN 2023": "rgb(204, 0, 0)",
+                                     "FOX 2021": "rgb(0, 51, 102)", "FOX 2022": "rgb(0, 51, 102)", "FOX 2023": "rgb(0, 51, 102)"})
     fig.update_traces(mode='lines+markers')
 
     # Adding a toggle by year:
@@ -64,30 +68,38 @@ def plot_month_year():
         updatemenus=[
             dict(
                 buttons=list([
-                    dict(label = 'All Years',
-                        method = 'update',
-                        args = [{'visible': [True, True, True, False, True, True, True]},
-                                {'title': 'Articles by Year',
-                                'showlegend':True}]),
-                    dict(label = '2021 Articles',
-                        method = 'update',
-                        args = [{'visible': [True, False, False, False, True, False, False]},
-                                {'title': 'Articles from 2021',
-                                'showlegend':True}]),
-                    dict(label = '2021 Articles',
-                        method = 'update',
-                        args = [{'visible': [False, True, False, False, False, True, False]},
-                                {'title': 'Articles from 2022',
-                                'showlegend':True}]),
-                    dict(label = '2021 Articles',
-                        method = 'update',
-                        args = [{'visible': [False, False, True, False, False, False, True]},
-                                {'title': 'Articles from 2023',
-                                'showlegend':True}]),
-                ])
+                    dict(label='All Years',
+                         method='update',
+                         args=[{'visible': [True, True, True, False, True, True, True]},
+                               {'title': 'Articles by Year',
+                                'showlegend': True}]),
+                    dict(label='2021',
+                         method='update',
+                         args=[{'visible': [True, False, False, False, True, False, False]},
+                               {'title': 'Articles from 2021',
+                                'showlegend': True}]),
+                    dict(label='2022',
+                         method='update',
+                         args=[{'visible': [False, True, False, False, False, True, False]},
+                               {'title': 'Articles from 2022',
+                                'showlegend': True}]),
+                    dict(label='2023',
+                         method='update',
+                         args=[{'visible': [False, False, True, False, False, False, True]},
+                               {'title': 'Articles from 2023',
+                                'showlegend': True}]),
+                ]),
+                direction='left',
+                pad={"r": 10, "t": 10},
+                showactive=True,
+                x=1.0,
+                y=1.15
             )
-       ]
+        ]
     )
+
+    # Updating axis labels:
+    fig.update_layout(xaxis_title="Month", yaxis_title="Article Count", title_x=0.5)
 
     # Return statement:
     return fig
@@ -100,13 +112,13 @@ def plot_wordcloud_cnn():
         the words are, the more prevalent they are in terms on the frequency.
     """
 
-    # Unpacking the tuple:
+    # Unpacking the tuple from data_viz_prep helper:
     cnn_count, _ = word_count()
 
     # Creating the word cloud:
-    wordcloud_cnn = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(cnn_count)
+    wordcloud_cnn = WordCloud(width=1000, height=500, background_color='white').generate_from_frequencies(cnn_count)
     fig = px.imshow(wordcloud_cnn, title="CNN Word Cloud")
-    fig.update_layout(title_font_size=30)
+    fig.update_layout(title_font_size=30, margin=dict(l=0, r=0, t=50, b=0), title=dict(x=0.5, xanchor='center'))
 
     # Return statement:
     return fig
@@ -119,13 +131,13 @@ def plot_wordcloud_fox():
         the words are, the more prevalent they are in terms on the frequency.
     """
 
-    # Unpacking the tuple:
+    # Unpacking the tuple from data_viz_prep helper:
     _ ,fox_count = word_count()
 
     # Creating the word cloud:
-    wordcloud_fox = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(fox_count)
-    fig = px.imshow(wordcloud_fox, title="Fox Word Cloud")
-    fig.update_layout(title_font_size=30)
+    wordcloud_fox = WordCloud(width=1000, height=500, background_color='white').generate_from_frequencies(fox_count)
+    fig = px.imshow(wordcloud_fox, title="FOX Word Cloud")
+    fig.update_layout(title_font_size=30, margin=dict(l=0, r=0, t=50, b=0), title=dict(x=0.5, xanchor='center'))
 
     # Return statement:
     return fig
@@ -139,29 +151,29 @@ fox_wordcloud = plot_wordcloud_fox()
 plot_month_year = plot_month_year()
 plot_sentiment = plot_sentiment()
 
+app = Dash(external_stylesheets = [dbc.themes.SIMPLEX])
 app.layout = dbc.Container([
-    html.Br(),
-
-    dbc.Row(html.H1("Coverage of January 6th by News Source")),
-        # style = header_style
-        # justify = "center"),
 
     html.Br(),
 
-    dbc.Row(dcc.Graph(id = "cnn_wordcloud", 
-                      figure = cnn_wordcloud)),
+    dbc.Row(html.H1("Coverage of January 6th by News Source"), justify='center'),
 
-    dbc.Row(dcc.Graph(id = "fox_wordcloud", 
-                      figure = fox_wordcloud)),
+    html.Br(),
 
-    dbc.Row(dcc.Graph(id = "multiple line chart", 
-                      figure = plot_month_year)),
+    dbc.Row([
+        dbc.Col(dcc.Graph(id="cnn_wordcloud", figure=cnn_wordcloud)),
+        dbc.Col(dcc.Graph(id="fox_wordcloud", figure=fox_wordcloud))
+    ]),
 
-    dbc.Row(dcc.Graph(id = "multiple bar chart", 
-                      figure = plot_sentiment))],
+    dbc.Row(dcc.Graph(id="multiple line chart", figure=plot_month_year)),
 
+    dbc.Row(dcc.Graph(id="multiple bar chart", figure=plot_sentiment)),
 
-fluid = True, style = {'backgroundColor': "#D2E5D0"})
+    dbc.Row("Sources: CNN and Fox News Websites"),
+
+], fluid=True, style={'text-align': 'center'})
+
+# Main statement below:
 
 if __name__ == '__main__':
     app.run_server(debug = True, host = '0.0.0.0', port = 7991)
