@@ -32,7 +32,7 @@ def plot_sentiment():
 
     # Creating the bar graph:
     color_discrete_map = {'CNN': 'rgb(204, 0, 0)', 'FOX': 'rgb(0, 51, 102)'}
-
+    
     fig = px.bar(df, x=df.index, y=["CNN", "FOX"],
                  barmode='group', labels={'value': 'Frequency'},
                  category_orders={'index': category_order}, color_discrete_map=color_discrete_map)
@@ -146,10 +146,11 @@ def plot_wordcloud_fox():
 ### BELOW IS THE SETUP CODE FOR DASH ###
 
 # Setting data viz function returns as variables
+plot_sentiment = plot_sentiment()
+plot_month_year = plot_month_year()
 cnn_wordcloud = plot_wordcloud_cnn()
 fox_wordcloud = plot_wordcloud_fox()
-plot_month_year = plot_month_year()
-plot_sentiment = plot_sentiment()
+
 
 # HTML page setup :) : 
 app = Dash(external_stylesheets = [dbc.themes.SIMPLEX])
@@ -177,4 +178,4 @@ app.layout = dbc.Container([
 # Main statement below:
 
 if __name__ == '__main__':
-    app.run_server(debug = True, host = '0.0.0.0', port = 7991)
+    app.run_server(debug = True, host = '0.0.0.0', port = 7997)
